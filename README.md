@@ -63,3 +63,15 @@ Features
 
 **This project is open-source under the MIT License.**
 
+## Screenshots
+
+### Candidate Application Form
+![Candidate Application Form Preview](assets/screenshots/form-preview.PNG)
+
+### Admin Dashboard
+![Message Dashboard Overview](assets/screenshots/dashboard-preview.PNG)
+
+### Admin Dashboard
+![Message Dashboard Modal Overview](assets/screenshots/modal-preview.PNG)
+
+
