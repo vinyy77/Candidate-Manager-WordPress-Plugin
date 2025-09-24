@@ -1,0 +1,33 @@
+.candidate-form {
+    background: #fff;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    max-width: 600px;
+}
+.candidate-form label {
+    font-weight: bold;
+    margin-top: 10px;
+    display: block;
+}
+.candidate-form input, 
+.candidate-form select {
+    width: 100%;
+    padding: 8px;
+    margin: 5px 0 15px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+}
+.candidate-form button {
+    background: #0073aa;
+    color: #fff;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+.success-msg {
+    color: green;
+    font-weight: bold;
+    margin-bottom: 15px;
+}
