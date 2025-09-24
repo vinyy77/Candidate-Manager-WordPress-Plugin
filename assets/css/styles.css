@@ -1,33 +1,198 @@
+/* Form Container */
 .candidate-form {
     background: #fff;
-    padding: 20px;
+    padding: 30px;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+    max-width: 800px;
+    margin: 30px auto;
+    font-family: "Segoe UI", Tahoma, sans-serif;
+    color: #333;
+}
+
+/* Success Message */
+.form-success {
+    background: #e6ffed;
+    border: 1px solid #00a32a;
+    color: #135e18;
+    padding: 12px 15px;
     border-radius: 8px;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-    max-width: 600px;
+    margin-bottom: 20px;
+    font-weight: 600;
 }
+
+/* Form Row - Flex Layout */
+.form-row {
+    display: flex;
+    gap: 20px;
+    flex-wrap: wrap;
+}
+
+/* Group */
+.form-group {
+    flex: 1;
+    min-width: 200px;
+    margin-bottom: 18px;
+}
+
 .candidate-form label {
-    font-weight: bold;
-    margin-top: 10px;
+    font-weight: 600;
+    margin-bottom: 6px;
     display: block;
+    font-size: 14px;
+    color: #444;
 }
-.candidate-form input, 
+
+.candidate-form label span {
+    color: #d63638;
+}
+
+/* Inputs */
+.candidate-form input,
 .candidate-form select {
     width: 100%;
-    padding: 8px;
-    margin: 5px 0 15px;
-    border: 1px solid #ddd;
-    border-radius: 5px;
+    padding: 10px 12px;
+    font-size: 14px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    background: #fafafa;
+    transition: all 0.2s ease-in-out;
 }
-.candidate-form button {
+
+.candidate-form input:focus,
+.candidate-form select:focus {
+    border-color: #0073aa;
+    outline: none;
+    background: #fff;
+    box-shadow: 0 0 0 2px rgba(0,115,170,0.2);
+}
+
+/* File Inputs */
+.candidate-form input[type="file"] {
+    padding: 6px;
+    background: #fff;
+    border: 1px dashed #ccc;
+}
+
+/* Submit Button */
+.btn-submit {
     background: #0073aa;
     color: #fff;
-    padding: 10px 20px;
+    font-weight: 600;
     border: none;
-    border-radius: 5px;
+    padding: 12px 24px;
+    border-radius: 6px;
     cursor: pointer;
+    transition: 0.3s;
 }
-.success-msg {
-    color: green;
-    font-weight: bold;
-    margin-bottom: 15px;
+
+.btn-submit:hover {
+    background: #135e96;
+}
+
+/* Responsive */
+@media (max-width: 600px) {
+    .form-row {
+        flex-direction: column;
+    }
+}
+
+
+/* Form Container */
+.candidate-form {
+    background: #fff;
+    padding: 30px;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+    max-width: 800px;
+    margin: 30px auto;
+    font-family: "Segoe UI", Tahoma, sans-serif;
+    color: #333;
+}
+
+/* Success Message */
+.form-success {
+    background: #e6ffed;
+    border: 1px solid #00a32a;
+    color: #135e18;
+    padding: 12px 15px;
+    border-radius: 8px;
+    margin-bottom: 20px;
+    font-weight: 600;
+}
+
+/* Form Row - Flex Layout */
+.form-row {
+    display: flex;
+    gap: 20px;
+    flex-wrap: wrap;
+}
+
+/* Group */
+.form-group {
+    flex: 1;
+    min-width: 200px;
+    margin-bottom: 18px;
+}
+
+.candidate-form label {
+    font-weight: 600;
+    margin-bottom: 6px;
+    display: block;
+    font-size: 14px;
+    color: #444;
+}
+
+.candidate-form label span {
+    color: #d63638;
+}
+
+/* Inputs */
+.candidate-form input,
+.candidate-form select {
+    width: 100%;
+    padding: 10px 12px;
+    font-size: 14px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    background: #fafafa;
+    transition: all 0.2s ease-in-out;
+}
+
+.candidate-form input:focus,
+.candidate-form select:focus {
+    border-color: #0073aa;
+    outline: none;
+    background: #fff;
+    box-shadow: 0 0 0 2px rgba(0,115,170,0.2);
+}
+
+/* File Inputs */
+.candidate-form input[type="file"] {
+    padding: 6px;
+    background: #fff;
+    border: 1px dashed #ccc;
+}
+
+/* Submit Button */
+.btn-submit {
+    background: hwb(200 0% 88%);
+    color: #fff;
+    font-weight: 600;
+    border: none;
+    padding: 12px 24px;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.btn-submit:hover {
+    background: #135e96;
+}
+
+/* Responsive */
+@media (max-width: 600px) {
+    .form-row {
+        flex-direction: column;
+    }
 }

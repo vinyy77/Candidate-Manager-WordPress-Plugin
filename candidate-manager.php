@@ -24,7 +24,7 @@ register_activation_hook( __FILE__, 'candidate_manager_install' );
 
 // Load CSS/JS
 function candidate_manager_assets() {
-    wp_enqueue_style( 'candidate-manager-style', CANDIDATE_MANAGER_URL . 'assets/css/style.css' );
+    wp_enqueue_style( 'candidate-manager-style', CANDIDATE_MANAGER_URL . 'assets/css/styles.css' );
     wp_enqueue_script( 'candidate-manager-js', CANDIDATE_MANAGER_URL . 'assets/js/script.js', array('jquery'), false, true );
 }
 add_action( 'wp_enqueue_scripts', 'candidate_manager_assets' );
