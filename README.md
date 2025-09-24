@@ -68,10 +68,10 @@ Features
 ### Candidate Application Form
 ![Candidate Application Form Preview](assets/screenshots/form-preview.PNG)
 
-### Admin Dashboard
+### Message Dashboard
 ![Message Dashboard Overview](assets/screenshots/dashboard-preview.PNG)
 
-### Admin Dashboard
+### Message Dashboard Modal
 ![Message Dashboard Modal Overview](assets/screenshots/modal-preview.PNG)
 
 
