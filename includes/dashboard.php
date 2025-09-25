@@ -1,37 +1,63 @@
 <?php
+declare(strict_types=1);
+
+if (!defined('ABSPATH')) {
+    exit;
+}
+
 // === Candidate Dashboard Page === //
 function candidate_dashboard_menu() {
     add_menu_page(
-        "Candidate Applications",    
-        "Candidates",               
-        "manage_options",           
-        "candidate-dashboard",      
-        "candidate_dashboard_page", 
-        "dashicons-id-alt",         
-        26                          
+        "Candidate Applications",
+        "Candidates",
+        "manage_options",
+        "candidate-dashboard",
+        "candidate_dashboard_page",
+        "dashicons-id-alt",
+        26
     );
 }
 add_action("admin_menu", "candidate_dashboard_menu");
+
+// === Enqueue Styles & Scripts for Dashboard === //
+function candidate_dashboard_assets($hook) {
+    if ($hook !== 'toplevel_page_candidate-dashboard') {
+        return;
+    }
+
+    wp_enqueue_style(
+        'candidate-dashboard-style',
+        plugins_url('assets/css/dashboard.css', dirname(__FILE__)),
+        [],
+        '1.0.0'
+    );
+
+    wp_enqueue_script(
+        'candidate-dashboard-script',
+        plugins_url('assets/js/dashboard.js', dirname(__FILE__)),
+        ['jquery'],
+        '1.0.0',
+        true
+    );
+}
+add_action('admin_enqueue_scripts', 'candidate_dashboard_assets');
 
 // === Dashboard Page Content === //
 function candidate_dashboard_page() {
     global $wpdb;
     $table = $wpdb->prefix . "candidates";
 
-    // Handle delete action
-    if (isset($_GET['delete'])) {
-        $delete_id = intval($_GET['delete']);
-        $wpdb->delete($table, ["id" => $delete_id]);
-        echo "<div class='notice notice-success'><p>Candidate deleted successfully.</p></div>";
+    // Handle delete
+    if (isset($_GET['delete']) && check_admin_referer('candidate_delete_' . intval($_GET['delete']))) {
+        $wpdb->delete($table, ["id" => intval($_GET['delete'])]);
+        echo "<div class='notice notice-success is-dismissible'><p>✅ Candidate deleted successfully.</p></div>";
     }
 
     // Fetch candidates
     $candidates = $wpdb->get_results("SELECT * FROM $table ORDER BY created_at DESC");
     ?>
-
     <div class="wrap candidate-dashboard">
         <h1 class="page-title">📋 Candidate Applications</h1>
-
         <table class="candidate-table">
             <thead>
                 <tr>
@@ -44,42 +70,44 @@ function candidate_dashboard_page() {
                 </tr>
             </thead>
             <tbody>
-                <?php if ($candidates): ?>
-                    <?php foreach ($candidates as $candidate): ?>
-                        <tr>
-                            <td><?php echo esc_html($candidate->id); ?></td>
-                            <td><?php echo esc_html($candidate->full_name); ?></td>
-                            <td><?php echo esc_html($candidate->email); ?></td>
-                            <td><?php echo esc_html($candidate->position); ?></td>
-                            <td><?php echo esc_html(date("M d, Y H:i", strtotime($candidate->created_at))); ?></td>
-                            <td>
-                                <a href="#" 
-                                   class="btn-view" 
-                                   data-id="<?php echo $candidate->id; ?>"
-                                   data-name="<?php echo esc_attr($candidate->full_name); ?>"
-                                   data-email="<?php echo esc_attr($candidate->email); ?>"
-                                   data-position="<?php echo esc_attr($candidate->position); ?>"
-                                   data-age="<?php echo esc_attr($candidate->age); ?>"
-                                   data-phone="<?php echo esc_attr($candidate->phone); ?>"
-                                   data-address1="<?php echo esc_attr($candidate->address1); ?>"
-                                   data-address2="<?php echo esc_attr($candidate->address2); ?>"
-                                   data-city="<?php echo esc_attr($candidate->city); ?>"
-                                   data-state="<?php echo esc_attr($candidate->state); ?>"
-                                   data-zip="<?php echo esc_attr($candidate->zip); ?>"
-                                   data-license="<?php echo esc_attr($candidate->license_file); ?>"
-                                   data-resume="<?php echo esc_attr($candidate->resume_file); ?>"
-                                >View</a>
-                                
-                                <a href="<?php echo admin_url('admin.php?page=candidate-dashboard&delete=' . $candidate->id); ?>" 
-                                   onclick="return confirm('Are you sure you want to delete this candidate?');" 
-                                   class="btn-delete">Delete</a>
-                            </td>
-                        </tr>
-                    <?php endforeach; ?>
-                <?php else: ?>
-                    <tr>
-                        <td colspan="6" style="text-align:center;">No applications found.</td>
-                    </tr>
+                <?php if ($candidates): foreach ($candidates as $c): ?>
+                <?php
+                    // Build full name safely
+                    $name_parts = array_filter([
+                        $c->first_name ?? '',
+                        $c->last_name ?? '',
+                        $c->other_names ?? ''
+                    ]);
+                    $full_name = implode(' ', $name_parts);
+                ?>
+                <tr>
+                    <td><?= esc_html($c->id) ?></td>
+                    <td><?= esc_html($full_name) ?></td>
+                    <td><?= esc_html($c->email) ?></td>
+                    <td><?= esc_html($c->position) ?></td>
+                    <td><?= esc_html(date("M d, Y H:i", strtotime($c->created_at))) ?></td>
+                    <td>
+                        <a href="#" class="btn-view"
+                           data-id="<?= esc_attr($c->id) ?>"
+                           data-name="<?= esc_attr($full_name) ?>"
+                           data-email="<?= esc_attr($c->email) ?>"
+                           data-position="<?= esc_attr($c->position) ?>"
+                           data-age="<?= esc_attr($c->age) ?>"
+                           data-phone="<?= esc_attr($c->phone) ?>"
+                           data-address1="<?= esc_attr($c->address1) ?>"
+                           data-address2="<?= esc_attr($c->address2) ?>"
+                           data-city="<?= esc_attr($c->city) ?>"
+                           data-state="<?= esc_attr($c->state) ?>"
+                           data-zip="<?= esc_attr($c->zip) ?>"
+                           data-license="<?= esc_attr($c->license_file) ?>"
+                           data-resume="<?= esc_attr($c->resume_file) ?>">View</a>
+                        <a href="<?= wp_nonce_url(admin_url('admin.php?page=candidate-dashboard&delete=' . intval($c->id)), 'candidate_delete_' . intval($c->id)) ?>"
+                           onclick="return confirm('Delete this candidate?');"
+                           class="btn-delete">Delete</a>
+                    </td>
+                </tr>
+                <?php endforeach; else: ?>
+                <tr><td colspan="6" style="text-align:center;">No applications found.</td></tr>
                 <?php endif; ?>
             </tbody>
         </table>
@@ -105,154 +133,5 @@ function candidate_dashboard_page() {
             </div>
         </div>
     </div>
-
-    <style>
-        /* Table Styling */
-        .candidate-dashboard .page-title {
-            font-size: 24px;
-            font-weight: 600;
-            margin-bottom: 20px;
-            color: #23282d;
-        }
-
-        .candidate-table {
-            width: 100%;
-            border-collapse: collapse;
-            background: #fff;
-            border-radius: 10px;
-            overflow: hidden;
-            box-shadow: 0 3px 8px rgba(0,0,0,0.08);
-        }
-
-        .candidate-table thead {
-            background: #0073aa;
-            color: #fff;
-        }
-
-        .candidate-table th, .candidate-table td {
-            padding: 12px 15px;
-            text-align: left;
-        }
-
-        .candidate-table tr:nth-child(even) {
-            background: #f9f9f9;
-        }
-
-        .candidate-table tr:hover {
-            background: #f1f1f1;
-        }
-
-        .btn-view, .btn-delete {
-            padding: 6px 12px;
-            text-decoration: none;
-            font-size: 13px;
-            border-radius: 4px;
-            margin-right: 6px;
-        }
-
-        .btn-view {
-            background: #2271b1;
-            color: #fff;
-        }
-
-        .btn-view:hover {
-            background: #135e96;
-        }
-
-        .btn-delete {
-            background: #d63638;
-            color: #fff;
-        }
-
-        .btn-delete:hover {
-            background: #a82a2b;
-        }
-
-        /* Modal Styling */
-        .modal-overlay {
-            display: none;
-            position: fixed;
-            top: 0; left: 0; right: 0; bottom: 0;
-            background: rgba(0,0,0,0.6);
-            z-index: 9999;
-            justify-content: center;
-            align-items: center;
-        }
-
-        .modal-content {
-            background: #fff;
-            padding: 25px;
-            border-radius: 8px;
-            width: 500px;
-            max-width: 90%;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
-            animation: fadeIn 0.3s ease-in-out;
-        }
-
-        .modal-content h2 {
-            margin-top: 0;
-            margin-bottom: 15px;
-            font-size: 20px;
-            border-bottom: 1px solid #eee;
-            padding-bottom: 8px;
-        }
-
-        .modal-content p {
-            margin: 8px 0;
-            font-size: 14px;
-        }
-
-        .modal-close {
-            float: right;
-            font-size: 22px;
-            cursor: pointer;
-        }
-
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(-20px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-    </style>
-
-    <script>
-    document.addEventListener("DOMContentLoaded", function() {
-        const modal = document.getElementById("candidateModal");
-        const closeBtn = document.querySelector(".modal-close");
-
-        // Open modal
-        document.querySelectorAll(".btn-view").forEach(btn => {
-            btn.addEventListener("click", function(e) {
-                e.preventDefault();
-
-                document.getElementById("m-name").innerText = this.dataset.name;
-                document.getElementById("m-email").innerText = this.dataset.email;
-                document.getElementById("m-phone").innerText = this.dataset.phone || "N/A";
-                document.getElementById("m-age").innerText = this.dataset.age || "N/A";
-                document.getElementById("m-position").innerText = this.dataset.position;
-                document.getElementById("m-address").innerText = this.dataset.address1 + " " + (this.dataset.address2 || "");
-                document.getElementById("m-city").innerText = this.dataset.city;
-                document.getElementById("m-state").innerText = this.dataset.state;
-                document.getElementById("m-zip").innerText = this.dataset.zip;
-                
-                // Files
-                document.getElementById("m-license").href = this.dataset.license || "#";
-                document.getElementById("m-resume").href = this.dataset.resume || "#";
-
-                modal.style.display = "flex";
-            });
-        });
-
-        // Close modal
-        closeBtn.addEventListener("click", function() {
-            modal.style.display = "none";
-        });
-
-        window.addEventListener("click", function(e) {
-            if (e.target === modal) {
-                modal.style.display = "none";
-            }
-        });
-    });
-    </script>
     <?php
 }

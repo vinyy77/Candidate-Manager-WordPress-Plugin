@@ -71,14 +71,65 @@
         </div>
 
         <div class="form-group">
-            <label>Choose From Available Positions</label>
-            <select name="position" required>
-                <option value="">-- Select Position --</option>
-                <option value="Driver">Driver</option>
-                <option value="Sales">Sales</option>
-                <option value="Technician">Technician</option>
-            </select>
-        </div>
+  <label for="position">Position Applied For</label>
+  <select id="position" name="position" required>
+    <option value="">-- Select Position --</option>
+
+    <optgroup label="Healthcare">
+      <option value="Doctor">Doctor</option>
+      <option value="Nurse">Nurse</option>
+      <option value="Pharmacist">Pharmacist</option>
+      <option value="Caregiver">Caregiver</option>
+    </optgroup>
+
+    <optgroup label="Education">
+      <option value="Teacher">Teacher</option>
+      <option value="Lecturer">Lecturer</option>
+      <option value="Tutor">Tutor</option>
+      <option value="School Administrator">School Administrator</option>
+    </optgroup>
+
+    <optgroup label="Information Technology">
+      <option value="Software Developer">Software Developer</option>
+      <option value="Web Designer">Web Designer</option>
+      <option value="IT Support">IT Support</option>
+      <option value="Data Analyst">Data Analyst</option>
+      <option value="Cybersecurity Specialist">Cybersecurity Specialist</option>
+    </optgroup>
+
+    <optgroup label="Business & Finance">
+      <option value="Accountant">Accountant</option>
+      <option value="Banker">Banker</option>
+      <option value="Financial Analyst">Financial Analyst</option>
+      <option value="Business Development">Business Development</option>
+      <option value="Customer Service">Customer Service</option>
+    </optgroup>
+
+    <optgroup label="Skilled Trades">
+      <option value="Driver">Driver</option>
+      <option value="Electrician">Electrician</option>
+      <option value="Plumber">Plumber</option>
+      <option value="Technician">Technician</option>
+      <option value="Mechanic">Mechanic</option>
+    </optgroup>
+
+    <optgroup label="Creative & Media">
+      <option value="Graphic Designer">Graphic Designer</option>
+      <option value="Photographer">Photographer</option>
+      <option value="Content Writer">Content Writer</option>
+      <option value="Social Media Manager">Social Media Manager</option>
+      <option value="Marketing Specialist">Marketing Specialist</option>
+    </optgroup>
+
+    <optgroup label="Other">
+      <option value="Intern">Intern</option>
+      <option value="Volunteer">Volunteer</option>
+      <option value="Other">Other</option>
+    </optgroup>
+
+  </select>
+</div>
+
 
         <div class="form-row">
             <div class="form-group">
